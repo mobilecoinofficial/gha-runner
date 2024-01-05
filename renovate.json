@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "reviewers": ["team:infrastructure"],
   "packageRules": [
     {
       "matchDatasources": ["docker"],
