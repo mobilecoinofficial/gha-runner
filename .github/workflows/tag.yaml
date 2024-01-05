@@ -17,7 +17,7 @@ jobs:
     steps:
     # We need to use an external PAT here because GHA will not run downstream events if we use the built in token.
     - name: Checkout
-      uses: mobilecoinofficial/gh-actions/checkout@2839c84b9279bfc02df70884d42700769bfbfc39
+      uses: mobilecoinofficial/gh-actions/checkout@e09d39a953d6c229804cee44ee0d7a5048da361d
       with:
         token: ${{ secrets.ACTIONS_TOKEN }}
 
