@@ -1,0 +1,63 @@
+# Copyright (c) 2023 MobileCoin Inc.
+name: checks
+
+on:
+  pull_request: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  lint-docker:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@v0
+
+    - name: Run hadolint with reviewdog
+      uses: reviewdog/action-hadolint@v1
+      with:
+        fail_on_error: true
+        reporter: github-pr-review
+        exclude: |
+          *.dockerignore
+
+  lint-shell:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@v0
+
+    - name: Run shellcheck with reviewdog
+      uses: reviewdog/action-shellcheck@v1
+      with:
+        fail_on_error: true
+        reporter: github-pr-review
+
+  lint-actions:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@v0
+
+    - name: Run actionlint with reviewdog
+      uses: reviewdog/action-actionlint@v1
+      with:
+        fail_on_error: true
+        reporter: github-pr-review
+
+  workflow-ok:
+    needs:
+    - lint-docker
+    - lint-shell
+    - lint-actions
+    runs-on: ubuntu-22.04
+    steps:
+    - name: All Checks OK!
+      run: |
+        true

@@ -1,0 +1,31 @@
+# Copyright (c) 2023 MobileCoin Inc.
+name: build-and-publish
+
+on:
+  push:
+    tags:
+    - '*.*.*'
+  pull_request: {}
+
+env:
+  DOCKER_ORG: mobilecoin
+
+jobs:
+  docker:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@v0
+
+    - name: Build/Publish Image
+      uses: mobilecoinofficial/gh-actions/docker@v0
+      with:
+        dockerfile: ./Dockerfile
+        flavor: latest=true
+        images: mobilecoin/gha-runner
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        push: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
+        tags: |
+          type=semver,pattern={{version}},priority=20
+          type=sha,priority=10
+        username: ${{ secrets.DOCKERHUB_USERNAME }}

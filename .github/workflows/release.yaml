@@ -1,0 +1,22 @@
+# Copyright (c) 2023 MobileCoin Inc.
+name: release
+
+on:
+  push:
+    tags:
+    - '*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@v0
+
+    - name: Create a GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        generate_release_notes: true

@@ -1,0 +1,92 @@
+#!/bin/bash
+# Copyright (c) 2022-2023 MobileCoin Inc.
+
+# Set fancy pants colors
+no_color='\033[0m'
+bold_white='\033[1;37m'
+red='\033[0;31m'
+green='\033[0;32m'
+
+# Set default headers
+header="${bold_white}[pre-commit]${no_color}"
+ok="${green}[ OK ]${no_color}"
+failed="${red}[ FAILED ]${no_color}"
+
+# Check the results and print output if there are errors.
+check_results()
+{
+    if [[ "${error}" == "true" ]]
+    then
+        echo -e "${failed}"
+        echo -e "${out}"
+        exit 1
+    else
+        echo -e "${ok}"
+    fi
+}
+
+# error flag starts off as false
+error="false"
+
+# Get list of files included in the commit.  We don't need to necessarily check the whole project.
+files=$(git diff --cached --name-only --diff-filter=ACM)
+
+# Run shellcheck if installed
+if which shellcheck >/dev/null 2>&1
+then
+    echo -e -n "${header} Run shellcheck on files included in the commit "
+
+    out=""
+    for f in ${files}
+    do
+        # check only files that have proper shebang headers
+        if grep -E "^#!.*(sh|bash|ksh)$" "${f}" >/dev/null 2>&1
+        then
+            if ! out+=$(shellcheck -Calways -x "${f}" 2>&1)
+            then
+                error="true"
+            fi
+        fi
+    done
+
+    # check for error status and print results
+    check_results
+fi
+
+# Run actionlint to check GHA workflow syntax
+if which actionlint >/dev/null 2>&1
+then
+    echo -e -n "${header} Run actionlint on GHA workflow files "
+
+    out=""
+    if ! out+=$(actionlint -color 2>&1)
+    then
+        error="true"
+    fi
+
+    # check for error status and print results
+    check_results
+fi
+
+# Run hadolint on Dockerfiles included in .internal-ci/docker
+if which hadolint >/dev/null 2>&1
+then
+    echo -e -n "${header} Run hadolint on Dockerfiles "
+
+    out=""
+
+    # Find Dockerfile files
+    docker_files=$(find . -name "Dockerfile*" -type f | grep -v "dockerignore")
+
+    # helm lint on directories where there are chart.yaml files
+    for f in ${docker_files}
+    do
+        if ! out+=$(hadolint "${f}" 2>&1)
+        then
+            error="true"
+        fi
+    done
+
+    # check for error status and print results
+    check_results
+fi

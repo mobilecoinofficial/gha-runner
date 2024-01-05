@@ -1,0 +1,44 @@
+# Copyright (c) 2023 MobileCoin Inc.
+name: tag
+
+on:
+  push:
+    branches:
+    - main
+
+# when the gh publishes a new ghcr.io/actions/actions-runner image renovate should PR.
+# we want the tag from renovate update?
+# can we get renovate to add something like `[tag/2.310.0]` to the commit message?
+# something we can scrape?
+
+jobs:
+  tag:
+    runs-on: ubuntu-22.04
+    steps:
+    # We need to use an external PAT here because GHA will not run downstream events if we use the built in token.
+    - name: Checkout
+      uses: mobilecoinofficial/gh-actions/checkout@2839c84b9279bfc02df70884d42700769bfbfc39
+      with:
+        token: ${{ secrets.ACTIONS_TOKEN }}
+
+    # - name: Bump GitHub tag
+    #   id: bump
+    #   uses: anothrNick/github-tag-action@1.36.0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+    #     WITH_V: 'true'
+    #     DEFAULT_BUMP: patch
+    #     DRY_RUN: 'true'
+
+    # # Doing manual tags because anothrNick/github-tag-action won't retag a commit.
+    # - name: Get major and minor values for new tag
+    #   id: tags
+    #   env:
+    #     TAG: ${{ steps.bump.outputs.new_tag }}
+    #   run: |
+    #     export MAJOR_MINOR=${TAG%.*}
+    #     export MAJOR=${MAJOR_MINOR%.*}
+    #     git tag --force "${MAJOR}"
+    #     git tag --force "${MAJOR_MINOR}"
+    #     git tag --force "${TAG}"
+    #     git push --tags --force
