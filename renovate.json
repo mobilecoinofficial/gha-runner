@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "reviewers": ["team:infrastructure"],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "commitMessageExtra": "to [tag/{{{prettyNewVersion}}}]"
+    }
+  ]
+}
