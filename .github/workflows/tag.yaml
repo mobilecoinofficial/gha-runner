@@ -21,6 +21,14 @@ jobs:
       with:
         token: ${{ secrets.ACTIONS_TOKEN }}
 
+    - name: Get new tag from commit
+      shell: bash
+      env:
+        MESSAGE: ${{ github.event.head_commit.message }}
+      run: |
+        echo "${MESSAGE}"
+
+
     # - name: Bump GitHub tag
     #   id: bump
     #   uses: anothrNick/github-tag-action@1.36.0
