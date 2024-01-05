@@ -1,4 +1,4 @@
-# Copyright (c) 2023 MobileCoin Inc.
+# Copyright (c) 2024 MobileCoin Inc.
 name: tag
 
 on:
@@ -6,10 +6,8 @@ on:
     branches:
     - main
 
-# when the gh publishes a new ghcr.io/actions/actions-runner image renovate should PR.
-# we want the tag from renovate update?
-# can we get renovate to add something like `[tag/2.310.0]` to the commit message?
-# something we can scrape?
+# when the gh publishes a new ghcr.io/actions/actions-runner image renovate should PR and add in a message like `[tag/2.310.0]`
+# capture this output and tag the repo triggering the other build actions.
 
 jobs:
   tag:
@@ -21,32 +19,21 @@ jobs:
       with:
         token: ${{ secrets.ACTIONS_TOKEN }}
 
-    - name: Get new tag from commit
+    - name: Get new tag from commit and push
       shell: bash
       env:
         MESSAGE: ${{ github.event.head_commit.message }}
       run: |
-        echo "${MESSAGE}"
+        regex=".*\[tag/(.*)\].*"
 
-
-    # - name: Bump GitHub tag
-    #   id: bump
-    #   uses: anothrNick/github-tag-action@1.36.0
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-    #     WITH_V: 'true'
-    #     DEFAULT_BUMP: patch
-    #     DRY_RUN: 'true'
-
-    # # Doing manual tags because anothrNick/github-tag-action won't retag a commit.
-    # - name: Get major and minor values for new tag
-    #   id: tags
-    #   env:
-    #     TAG: ${{ steps.bump.outputs.new_tag }}
-    #   run: |
-    #     export MAJOR_MINOR=${TAG%.*}
-    #     export MAJOR=${MAJOR_MINOR%.*}
-    #     git tag --force "${MAJOR}"
-    #     git tag --force "${MAJOR_MINOR}"
-    #     git tag --force "${TAG}"
-    #     git push --tags --force
+        if [[ "${MESSAGE}" =~ $regex ]]
+        then
+            tag=${BASH_REMATCH[1]}
+            echo -n "Found tag: ${tag}"
+            git tag --force "${tag}"
+            git push --tags --force
+        else
+          echo "Could not find tag in commit message"
+          echo "${MESSAGE}"
+          exit 0
+        fi
