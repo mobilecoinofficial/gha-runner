@@ -16,4 +16,6 @@ RUN apt-get update \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
+COPY wait_for_docker_then_run.sh /usr/local/bin/wait_for_docker_then_run.sh
+
 USER runner
