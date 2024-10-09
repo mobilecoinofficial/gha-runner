@@ -21,8 +21,10 @@ jobs:
       uses: mobilecoinofficial/gh-actions/docker@v0
       with:
         dockerfile: ./Dockerfile
+        emulation: 'true'
         flavor: latest=true
         images: mobilecoin/gha-runner
+        platforms: linux/amd64,linux/arm64
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         push: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
         tags: |
