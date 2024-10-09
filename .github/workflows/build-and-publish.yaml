@@ -18,11 +18,13 @@ jobs:
       uses: mobilecoinofficial/gh-actions/checkout@v0
 
     - name: Build/Publish Image
-      uses: mobilecoinofficial/gh-actions/docker@v0
+      uses: mobilecoinofficial/gh-actions/docker@90b484a85e921fd78c596dbafa3225d9ba77b7d4
       with:
         dockerfile: ./Dockerfile
+        emulation: 'true'
         flavor: latest=true
         images: mobilecoin/gha-runner
+        platforms: linux/amd64,linux/arm64
         password: ${{ secrets.DOCKERHUB_TOKEN }}
         push: ${{ github.event_name == 'pull_request' && 'false' || 'true' }}
         tags: |
