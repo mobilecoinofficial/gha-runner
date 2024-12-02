@@ -4,15 +4,16 @@ USER root
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-  curl \
   ca-certificates \
-  zstd \
-  gzip \
-  tar \
-  jq \
+  curl \
   git \
-  zip \
+  git-lfs \
+  gzip \
+  jq \
+  tar \
   unzip \
+  zip \
+  zstd \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
