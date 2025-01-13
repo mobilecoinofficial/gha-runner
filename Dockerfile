@@ -1,18 +1,19 @@
-FROM ghcr.io/actions/actions-runner:2.319.1
+FROM ghcr.io/actions/actions-runner:2.321.0
 
 USER root
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
-  curl \
   ca-certificates \
-  zstd \
-  gzip \
-  tar \
-  jq \
+  curl \
   git \
-  zip \
+  git-lfs \
+  gzip \
+  jq \
+  tar \
   unzip \
+  zip \
+  zstd \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 RUN curl -SL https://github.com/docker/compose/releases/download/v2.28.1/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose

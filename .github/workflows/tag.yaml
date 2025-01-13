@@ -11,7 +11,7 @@ on:
 
 jobs:
   tag:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     # We need to use an external PAT here because GHA will not run downstream events if we use the built in token.
     - name: Checkout
