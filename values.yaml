@@ -9,60 +9,59 @@ runnerScaleSetName: custom-k8s-runner
 template:
   spec:
     containers:
-    - command:
-      - /home/runner/run.sh
-      image: unstract/actions-runner:2.319.1
-      name: runner
+      - command:
+          - /home/runner/run.sh
+        image: unstract/actions-runner:2.322.0
+        name: runner
   template:
     spec:
       containers:
-      - command:
-        - /home/runner/run.sh
-        env:
-        - name: DOCKER_HOST
-          value: unix:///var/run/docker.sock
-        image: unstract/actions-runner:2.319.1
-        name: runner
-        volumeMounts:
-        - mountPath: /home/runner/_work
-          name: work
-        - mountPath: /var/run
-          name: dind-sock
-      - args:
-        - dockerd
-        - --host=unix:///var/run/docker.sock
-        - --group=$(DOCKER_GROUP_GID)
-        env:
-        - name: DOCKER_GROUP_GID
-          value: "123"
-        image: docker:dind
-        name: dind
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - mountPath: /home/runner/_work
-          name: work
-        - mountPath: /var/run
-          name: dind-sock
-        - mountPath: /home/runner/externals
-          name: dind-externals
+        - command:
+            - /home/runner/run.sh
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+          image: unstract/actions-runner:2.322.0
+          name: runner
+          volumeMounts:
+            - mountPath: /home/runner/_work
+              name: work
+            - mountPath: /var/run
+              name: dind-sock
+        - args:
+            - dockerd
+            - --host=unix:///var/run/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+          image: docker:dind
+          name: dind
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /home/runner/_work
+              name: work
+            - mountPath: /var/run
+              name: dind-sock
+            - mountPath: /home/runner/externals
+              name: dind-externals
       initContainers:
-      - command:
-        - cp
-        - -r
-        - -v
-        - /home/runner/externals/.
-        - /home/runner/tmpDir/
-        image: unstract/actions-runner:2.319.1
-        name: init-dind-externals
-        volumeMounts:
-        - mountPath: /home/runner/tmpDir
-          name: dind-externals
+        - command:
+            - cp
+            - -r
+            - -v
+            - /home/runner/externals/.
+            - /home/runner/tmpDir/
+          image: unstract/actions-runner:2.322.0
+          name: init-dind-externals
+          volumeMounts:
+            - mountPath: /home/runner/tmpDir
+              name: dind-externals
       volumes:
-      - emptyDir: {}
-        name: work
-      - emptyDir: {}
-        name: dind-sock
-      - emptyDir: {}
-        name: dind-externals
-        
+        - emptyDir: {}
+          name: work
+        - emptyDir: {}
+          name: dind-sock
+        - emptyDir: {}
+          name: dind-externals
