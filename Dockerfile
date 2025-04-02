@@ -14,6 +14,7 @@ RUN apt-get update \
   unzip \
   zip \
   zstd \
+  make \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
