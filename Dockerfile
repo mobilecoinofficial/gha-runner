@@ -15,6 +15,8 @@ RUN apt-get update \
   zip \
   zstd \
   make \
+  gcc-multilib \
+  g++-multilib \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
