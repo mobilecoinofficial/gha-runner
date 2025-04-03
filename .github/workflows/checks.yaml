@@ -16,40 +16,20 @@ jobs:
   lint-docker:
     runs-on: ubuntu-24.04
     steps:
-    - name: Checkout
-      uses: mobilecoinofficial/gh-actions/checkout@v0
-
-    - name: Run hadolint with reviewdog
-      uses: reviewdog/action-hadolint@v1
-      with:
-        fail_on_error: true
-        reporter: github-pr-review
-        exclude: |
-          *.dockerignore
+    - name: hadolint
+      uses: mobilecoinofficial/gh-actions/lint-docker@v0
 
   lint-shell:
     runs-on: ubuntu-24.04
     steps:
-    - name: Checkout
-      uses: mobilecoinofficial/gh-actions/checkout@v0
-
-    - name: Run shellcheck with reviewdog
-      uses: reviewdog/action-shellcheck@v1
-      with:
-        fail_on_error: true
-        reporter: github-pr-review
+    - name: shellcheck
+      uses: mobilecoinofficial/gh-actions/lint-shell@v0
 
   lint-actions:
     runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: mobilecoinofficial/gh-actions/checkout@v0
-
-    - name: Run actionlint with reviewdog
-      uses: reviewdog/action-actionlint@v1
-      with:
-        fail_on_error: true
-        reporter: github-pr-review
+      uses: mobilecoinofficial/gh-actions/lint-actions@v0
 
   workflow-ok:
     needs:
