@@ -14,19 +14,19 @@ permissions:
 
 jobs:
   lint-docker:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: hadolint
       uses: mobilecoinofficial/gh-actions/lint-docker@v0
 
   lint-shell:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: shellcheck
       uses: mobilecoinofficial/gh-actions/lint-shell@v0
 
   lint-actions:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: Checkout
       uses: mobilecoinofficial/gh-actions/lint-actions@v0
@@ -36,7 +36,7 @@ jobs:
     - lint-docker
     - lint-shell
     - lint-actions
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: All Checks OK!
       run: |
