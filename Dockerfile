@@ -1,4 +1,4 @@
-FROM ghcr.io/actions/actions-runner:2.338.1
+FROM ghcr.io/actions/actions-runner:2.338.2
 
 USER root
 
